@@ -2,10 +2,24 @@ import mongoose from "mongoose";
 
 const todoSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    title: String,
-    completed: Boolean,
-    order: Number,
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
+    order: {
+      type: Number,
+      default: 0,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true, // 🔥 key point
+    },
   },
   { timestamps: true }
 );

@@ -1,26 +1,59 @@
 import Todo from "../models/Todo.js";
 
+/* GET todos for logged-in user */
 export const getTodos = async (req, res) => {
-  const todos = await Todo.find({ user: req.user }).sort("order");
-  res.json(todos);
+  try {
+    const { userId } = req.query; // 🔥 from frontend
+
+    if (!userId) {
+      return res.status(400).json({ message: "User not provided" });
+    }
+
+    const todos = await Todo.find({ userId }).sort({ order: 1 });
+    res.json(todos);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch todos" });
+  }
 };
 
+/* CREATE todo */
 export const createTodo = async (req, res) => {
-  const todo = await Todo.create({
-    ...req.body,
-    user: req.user,
-  });
-  res.json(todo);
+  try {
+    const { title, completed, order, userId } = req.body;
+
+    const todo = await Todo.create({
+      title,
+      completed,
+      order,
+      userId,
+    });
+
+    res.status(201).json(todo);
+  } catch {
+    res.status(500).json({ message: "Create failed" });
+  }
 };
 
+/* UPDATE todo */
 export const updateTodo = async (req, res) => {
-  const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  res.json(todo);
+  try {
+    const updated = await Todo.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(updated);
+  } catch {
+    res.status(500).json({ message: "Update failed" });
+  }
 };
 
+/* DELETE todo */
 export const deleteTodo = async (req, res) => {
-  await Todo.findByIdAndDelete(req.params.id);
-  res.json({ message: "Deleted" });
+  try {
+    await Todo.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ message: "Delete failed" });
+  }
 };
