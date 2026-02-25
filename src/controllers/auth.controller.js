@@ -50,13 +50,13 @@ export const login = async (req, res) => {
 
     // 3️⃣ SUCCESS (NO JWT as you requested)
     res.status(200).json({
-      message: "Login successful",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-    });
+  message: "Login successful",
+  user: {
+    _id: user._id,      // 🔥 FIX
+    name: user.name,
+    email: user.email,
+  },
+});
   } catch (err) {
     console.error("LOGIN ERROR:", err);
     res.status(500).json({ message: "Server error" });

@@ -19,18 +19,25 @@ export const getTodos = async (req, res) => {
 /* CREATE todo */
 export const createTodo = async (req, res) => {
   try {
-    const { title, completed, order, userId } = req.body;
+    const { title, completed = false, order = 0, userId } = req.body;
 
-    const todo = await Todo.create({
+    if (!title || !userId) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
+
+    await Todo.create({
       title,
       completed,
       order,
       userId,
     });
 
-    res.status(201).json(todo);
-  } catch {
-    res.status(500).json({ message: "Create failed" });
+    const todos = await Todo.find({ userId }).sort({ order: 1 });
+
+    res.status(201).json(todos); // ✅ ARRAY ONLY
+  } catch (err) {
+    console.error("CREATE TODO ERROR:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
