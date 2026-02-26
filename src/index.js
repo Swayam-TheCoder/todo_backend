@@ -10,26 +10,6 @@ connectDB();
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://full-stack-todo-list-rhb26p4cv-hello-e803509d.vercel.app"
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow Postman
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed"));
-      }
-    },
-    credentials: true,
-  })
-);
-
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/todos", todoRoutes);
