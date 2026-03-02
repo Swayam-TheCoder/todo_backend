@@ -27,6 +27,13 @@ app.use(
 
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "Backend is running 🚀",
+  });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/todos", todoRoutes);
 
