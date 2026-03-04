@@ -10,23 +10,19 @@ const allowedOrigins = [
   "https://full-stack-todo-list-nine.vercel.app"
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // Postman / server requests
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS not allowed"));
+    }
+  },
+  credentials: true,
+}));
 
 app.use(express.json());
-
+  
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "OK",
@@ -38,3 +34,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/todos", todoRoutes);
 
 export default app;
+
+
+// finally deployed achievement at commit fix3
