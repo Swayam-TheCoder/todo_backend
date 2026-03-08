@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import todoRoutes from "./routes/todo.routes.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -22,7 +23,8 @@ app.use(cors({
 }));
 
 app.use(express.json());
-  
+app.use(cookieParser());
+
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "OK",
@@ -37,3 +39,5 @@ export default app;
 
 
 // finally deployed achievement at commit fix3
+
+// Let work on user profile and database the todos will be store according the user..
