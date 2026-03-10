@@ -4,7 +4,7 @@ export const protect = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ message: "Not authorized" });
+    return res.status(401).json({ message: "Not logged in" });
   }
 
   try {
@@ -12,12 +12,16 @@ export const protect = (req, res, next) => {
     req.userId = decoded.id;
     next();
   } catch {
-    res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
 
 export const getMe = async (req, res) => {
   try {
+    if (!req.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
     const user = await User.findById(req.userId).select("-password");
 
     if (!user) {
@@ -28,4 +32,4 @@ export const getMe = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
-};  
+};
