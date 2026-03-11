@@ -4,11 +4,14 @@ import dotenv from "dotenv";
 dotenv.config(); // Loads your .env file variables
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER, // Safer
     pass: process.env.EMAIL_PASS, // Use the 16-character App Password here
   },
+  connectionTimeout: 10000,
 });
 
 export const sendWelcomeEmail = (toEmail, userName) => {
