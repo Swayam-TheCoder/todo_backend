@@ -7,11 +7,12 @@ const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
-  auth: {
-    user: process.env.EMAIL_USER, // Safer
-    pass: process.env.EMAIL_PASS, // Use the 16-character App Password here
-  },
+  family: 4,
   connectionTimeout: 10000,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 export const sendWelcomeEmail = async (toEmail, userName) => {
@@ -47,10 +48,10 @@ export const sendWelcomeEmail = async (toEmail, userName) => {
   }
   };
 
-  transporter.verify((error, success) => {
+transporter.verify((error, success) => {
   if (error) {
     console.log("SMTP Error:", error);
   } else {
-    console.log("SMTP Server is ready to send emails");
+    console.log("✅ SMTP server ready");
   }
 });
