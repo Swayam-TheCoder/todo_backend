@@ -14,8 +14,9 @@ const transporter = nodemailer.createTransport({
   connectionTimeout: 10000,
 });
 
-export const sendWelcomeEmail = (toEmail, userName) => {
-  const mailOptions = {
+export const sendWelcomeEmail = async (toEmail, userName) => {
+  try {
+    const info = await transporter.sendMail({
     // Adding a "Friendly Name" makes it look much more professional
     from: `"My To-Do App" <${process.env.EMAIL_USER}>`, 
     to: toEmail,
@@ -39,14 +40,17 @@ export const sendWelcomeEmail = (toEmail, userName) => {
         <hr style="border: none; border-top: 1px solid #eee; margin-top: 30px;">
         <p style="font-size: 12px; color: #888;">Happy organizing,<br>The Amazing To-Do Team</p>
       </div>
-    `,
+    `});
+    console.log("Email sent:", info.response);
+  } catch (error) {
+    console.error("Email error:", error);
+  }
   };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.error("❌ Error sending email:", err);
-    } else {
-      console.log("✅ Email sent successfully:", info.response);
-    }
-  });
-};
+  transporter.verify((error, success) => {
+  if (error) {
+    console.log("SMTP Error:", error);
+  } else {
+    console.log("SMTP Server is ready to send emails");
+  }
+});
