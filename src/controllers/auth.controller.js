@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import { isValidEmail, isStrongPassword } from "../utils/validators.js";
 import { generateToken } from "../utils/generateToken.js";
+import { sendWelcomeEmail } from "../utils/mailer.js";
 
 
 export const getMe = async (req, res) => {
@@ -58,6 +59,9 @@ export const register = async (req, res) => {
       email,
       password: hashedPassword,
     });
+
+    // Send welcome email
+    sendWelcomeEmail(email, name);
 
     // 🔑 Generate JWT
     const token = generateToken(user._id);
