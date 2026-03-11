@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+
 import dotenv from "dotenv";
 import { Resend } from "resend";
 
@@ -6,20 +6,9 @@ dotenv.config(); // Loads your .env file variables
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  family: 4,
-  connectionTimeout: 10000,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-export const sendWelcomeEmail = async (toEmail, name) => {
-  await resend.emails.send({
+export const sendWelcomeEmail = async (toEmail, userName) => {
+  try {
+    await resend.emails.send({
     from: `"My To-Do App" <${process.env.EMAIL_USER}>`, 
     to: toEmail,
     subject: "Welcome to Our To-Do App! ✅",
@@ -42,13 +31,10 @@ export const sendWelcomeEmail = async (toEmail, name) => {
         <hr style="border: none; border-top: 1px solid #eee; margin-top: 30px;">
         <p style="font-size: 12px; color: #888;">Happy organizing,<br>The Amazing To-Do Team</p>
       </div>
-    `  });
-};
-
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("SMTP Error:", error);
-  } else {
-    console.log("✅ SMTP server ready");
+    `,
+    });
+console.log("✅ Email sent");
+  } catch (error) {
+    console.error("Email error:", error);
   }
-});
+};
