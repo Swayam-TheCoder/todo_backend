@@ -8,8 +8,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendWelcomeEmail = async (toEmail, userName) => {
   try {
-    await resend.emails.send({
-    from: "My To-Do App <Swayam@resend.dev>",
+    const response = await resend.emails.send({
+    from: "My To-Do App <Swayam@myapp.com>",
     to: toEmail,
     subject: "Welcome to Our To-Do App! ✅",
     html: `
@@ -33,6 +33,7 @@ export const sendWelcomeEmail = async (toEmail, userName) => {
       </div>
     `,
     });
+    console.log("Email response:", response);
 console.log("✅ Email sent");
   } catch (error) {
     console.error("Email error:", error);
