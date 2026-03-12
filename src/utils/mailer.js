@@ -9,7 +9,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const sendWelcomeEmail = async (toEmail, userName) => {
   try {
     await resend.emails.send({
-    from: `"My To-Do App" <${process.env.EMAIL_USER}>`, 
+    from: "My To-Do App <Swayam@resend.dev>",
     to: toEmail,
     subject: "Welcome to Our To-Do App! ✅",
     html: `

@@ -61,7 +61,7 @@ export const register = async (req, res) => {
     });
 
     // Send welcome email
-    sendWelcomeEmail(email, name);
+    await sendWelcomeEmail(email, name);
 
     // 🔑 Generate JWT
     const token = generateToken(user._id);
@@ -151,4 +151,39 @@ export const logout = async (req, res) => {
   });
 
   res.status(200).json({ message: "Logged out successfully" });
+};
+
+
+// ================= DELETE ACCOUNT =================
+export const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.userId; // coming from protect middleware
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    await User.findByIdAndDelete(userId);
+
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Account deleted successfully",
+    });
+
+  } catch (error) {
+    console.error("Delete account error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
 };
